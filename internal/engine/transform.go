@@ -22,7 +22,7 @@ func NewTransform() Transform {
 
 
 
-func (t *Transform) ModelMatrix() mgl32.Mat4 {
+func (t *Transform) GetModelMatrix() mgl32.Mat4 {
 	model := mgl32.Ident4()
 
 	model = model.Mul4(mgl32.Translate3D(t.Position.X(), t.Position.Y(), t.Position.Z()))

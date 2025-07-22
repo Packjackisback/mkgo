@@ -19,7 +19,6 @@ func New() *Engine {
 func (e *Engine) Run() error {
 	fmt.Println("Starting Mario Kart Go")
 
-	//creating the renderer
 	var err error
   e.renderer, err = NewRenderer(800, 600, "Mario Kart Go")
   if err != nil {
@@ -34,9 +33,13 @@ func (e *Engine) Run() error {
 	rect2.SetPosition(-0.5, 0.0, 0.0)
 	rect2.SetScale(0.5, 0.5, 1.0)
 	rect2.SetRotation(mgl32.DegToRad(45), 0, 0, 1) 
-
+	
+	tri1 := NewTriangle()
+	tri1.SetPosition(0.0, 1.0, 0.0)
+	tri1.SetColor(1.0, 0.0, 0.0)
 	e.renderer.AddMesh(rect1)
 	e.renderer.AddMesh(rect2)
+	e.renderer.AddMesh(tri1)
 
 
 	e.running = true

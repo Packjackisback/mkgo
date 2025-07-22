@@ -25,11 +25,13 @@ void main() {
 
 const fragmentShaderSource = `
 #version 410 core
-in vec3 vertexColor;
+
+uniform vec3 uColor;
+
 out vec4 fragColor;
 
 void main() {
-    fragColor = vec4(vertexColor, 1.0);
+    fragColor = vec4(uColor, 1.0);
 }
 ` + "\x00"
 
@@ -90,6 +92,12 @@ func (s *Shader) SetMat4(name string, matrix mgl32.Mat4) {
 	location := gl.GetUniformLocation(s.program, gl.Str(name+"\x00"))
 	gl.UniformMatrix4fv(location, 1, false, &matrix[0])
 }
+
+func (s *Shader) SetVec3(name string, vec mgl32.Vec3) {
+    location := gl.GetUniformLocation(s.program, gl.Str(name+"\x00"))
+    gl.Uniform3f(location, vec.X(), vec.Y(), vec.Z())
+}
+
 
 func compileShader(source string, shaderType uint32) (uint32, error) {
 	shader := gl.CreateShader(shaderType)

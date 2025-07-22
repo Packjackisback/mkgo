@@ -84,7 +84,7 @@ func (r *Renderer) Render() {
 	r.shader.Use()
 
 	for _, mesh := range r.meshes {
-		model := mesh.GetTransform().ModelMatrix()
+		model := mesh.GetTransform().GetModelMatrix()
 		r.shader.SetMat4("model", model)
 		mesh.Render(r.shader)
 	}
