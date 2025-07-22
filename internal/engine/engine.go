@@ -2,7 +2,6 @@ package engine
 
 import (
 	"fmt"
-	"github.com/go-gl/mathgl/mgl32"	
 )
 
 type Engine struct {
@@ -26,21 +25,26 @@ func (e *Engine) Run() error {
   }
   defer e.renderer.Cleanup()
 	
-	rect1 := NewRectangle()
-	rect1.SetPosition(0.5, 0.0, 0.0)
-
-	rect2 := NewRectangle()
-	rect2.SetPosition(-0.5, 0.0, 0.0)
-	rect2.SetScale(0.5, 0.5, 1.0)
-	rect2.SetRotation(mgl32.DegToRad(45), 0, 0, 1) 
 	
-	tri1 := NewTriangle()
-	tri1.SetPosition(0.0, 1.0, 0.0)
-	tri1.SetColor(1.0, 0.0, 0.0)
-	e.renderer.AddMesh(rect1)
-	e.renderer.AddMesh(rect2)
-	e.renderer.AddMesh(tri1)
+	circle1 := NewCircle(
+		WithColor(0.99607843137, 0.890196078, 0.83137254),
+		WithPosition(-0.2, -0.5, 0.0),
+	)
 
+	circle2 := NewCircle(
+		WithColor(0.99607843137, 0.890196078, 0.83137254),
+		WithPosition(0.2, -0.5, 0.0),
+	)
+
+	rect1 := NewRectangle(
+		WithColor(0.99607843137, 0.890196078, 0.83137254),
+		WithPosition(0.0, 0.0, 0.0),
+		WithScale(0.7, 0.9, 0.0),
+	)
+	
+	e.renderer.AddMesh(circle1)
+	e.renderer.AddMesh(circle2)
+	e.renderer.AddMesh(rect1)
 
 	e.running = true
 

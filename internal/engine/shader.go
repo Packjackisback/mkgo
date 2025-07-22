@@ -40,24 +40,17 @@ type Shader struct {
 }
 
 func NewShader() (*Shader, error) {
-	fmt.Println("Creating shader program...")
-	
-	// Compile vertex shader
-	fmt.Println("Compiling vertex shader...")
 	vertexShader, err := compileShader(vertexShaderSource, gl.VERTEX_SHADER)
 	if err != nil {
 		return nil, err
 	}
 	defer gl.DeleteShader(vertexShader)
-	fmt.Println("Vertex shader compiled successfully")
 
-	fmt.Println("Compiling fragment shader...")
 	fragmentShader, err := compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
 	if err != nil {
 		return nil, err
 	}
 	defer gl.DeleteShader(fragmentShader)
-	fmt.Println("Fragment shader compiled successfully")
 
 	program := gl.CreateProgram()
 	gl.AttachShader(program, vertexShader)

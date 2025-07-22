@@ -4,10 +4,9 @@ type Rectangle struct {
 	BaseMesh
 }
 
-func NewRectangle() *Rectangle {
-	r := &Rectangle{
-		BaseMesh: NewBaseMesh(),
-	}
+
+func NewRectangle(opts ...MeshOption) *Rectangle {
+	r := &Rectangle{BaseMesh: NewBaseMesh()}
 
 	vertices := []float32{
 		// Positions       // Colors
@@ -18,12 +17,16 @@ func NewRectangle() *Rectangle {
 	}
 
 	indices := []uint32{
-		0, 1, 3, // first 
-		1, 2, 3, // second
+		0, 1, 3, // first triangle
+		1, 2, 3, // second triangle
 	}
 
-	r.SetColor(1.0, 1.0, 1.0) // white
 	r.SetVertexData(vertices, indices)
+
+	for _, opt := range opts {
+		opt(&r.BaseMesh)
+	}
+
 	return r
 }
 

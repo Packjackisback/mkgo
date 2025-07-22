@@ -29,8 +29,8 @@ func NewBaseMesh() BaseMesh {
 	}
 }
 
-func (b *BaseMesh) GetTransform() *Transform {
-	return &b.transform
+func (m *BaseMesh) GetTransform() *Transform {
+	return &m.transform
 }
 
 func (m *BaseMesh) SetPosition(x, y, z float32) {
@@ -57,11 +57,9 @@ func (m *BaseMesh) GetColor() (x, y, z float32) {
 func (m *BaseMesh) Render(shader *Shader) {
 	shader.Use()
 
-	// Set uniforms
 	shader.SetVec3("uColor", m.color)
 	shader.SetMat4("uModel", m.transform.GetModelMatrix())
 
-	// Bind and draw
 	gl.BindVertexArray(m.vao)
 	if m.hasEBO {
 		gl.DrawElements(gl.TRIANGLES, m.indexCount, gl.UNSIGNED_INT, gl.PtrOffset(0))

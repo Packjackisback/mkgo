@@ -4,18 +4,21 @@ type Triangle struct {
 	BaseMesh
 }
 
-func NewTriangle() *Triangle {
+
+func NewTriangle(opts ...MeshOption) *Triangle {
 	t := &Triangle{BaseMesh: NewBaseMesh()}
 
 	vertices := []float32{
-		// Position        // Color
-		 0.0,  0.5, 0.0,   1.0, 0.0, 0.0, // Top
-		-0.5, -0.5, 0.0,   0.0, 1.0, 0.0, // Bottom-left
-		 0.5, -0.5, 0.0,   0.0, 0.0, 1.0, // Bottom-right
+		0.0,  0.5, 0.0,   1.0, 0.0, 0.0,
+		-0.5, -0.5, 0.0,   0.0, 1.0, 0.0,
+		0.5, -0.5, 0.0,   0.0, 0.0, 1.0,
+	}
+	t.SetVertexData(vertices, nil)
+
+	for _, opt := range opts {
+		opt(&t.BaseMesh)
 	}
 
-	t.SetVertexData(vertices, nil)
-	t.SetColor(1, 1, 1) 
 	return t
 }
 
