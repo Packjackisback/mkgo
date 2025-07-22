@@ -3,7 +3,7 @@ package engine
 import (
 	"fmt"
 	"runtime"
-
+	"github.com/go-gl/mathgl/mgl32"
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
@@ -14,9 +14,10 @@ type Renderer struct {
 	height int
 	shader *Shader
 	meshes []Mesh
+	camera *Camera
 }
 
-func NewRenderer(width, height int, title string) (*Renderer, error) {
+func NewRenderer(width, height int, title string, camera *Camera) (*Renderer, error) {
 	runtime.LockOSThread()
 
 	if err := glfw.Init(); err != nil {
@@ -42,7 +43,6 @@ func NewRenderer(width, height int, title string) (*Renderer, error) {
 
 	gl.Viewport(0, 0, int32(width), int32(height))
 
-	// create shader
 	shader, err := NewShader()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create shader: %v", err)
@@ -53,6 +53,7 @@ func NewRenderer(width, height int, title string) (*Renderer, error) {
 		width:  width,
 		height: height,
 		shader: shader,
+		camera: camera,
 		meshes: make([]Mesh, 0),
 	}
 
@@ -81,7 +82,17 @@ func (r *Renderer) Clear() {
 
 
 func (r *Renderer) Render() {
+	gl.Enable(gl.DEPTH_TEST)
+	view := r.camera.GetViewMatrix()
+	aspect := float32(r.width) / float32(r.height)
+	projection := r.camera.GetProjectionMatrix(aspect)
+	
 	r.shader.Use()
+	r.shader.SetMat4("uView", view)
+	r.shader.SetMat4("uProjection", projection)
+
+	r.shader.SetVec3("uLightPos", mgl32.Vec3{2, 2, 3})
+	r.shader.SetVec3("uViewPos", mgl32.Vec3{2, 2, 3})
 
 	for _, mesh := range r.meshes {
 		model := mesh.GetTransform().GetModelMatrix()

@@ -2,16 +2,21 @@ package engine
 
 import (
 	"fmt"
+	"math"
+	"github.com/go-gl/mathgl/mgl32"
+	"time"
 )
 
 type Engine struct {
 	renderer *Renderer
+	camera 	 *Camera
 	running bool
+	startTime time.Time
 }
 
 func New() *Engine {
 	return &Engine {
-		running: false,
+		running: false, camera: NewCamera(),
 	}
 }
 
@@ -19,34 +24,22 @@ func (e *Engine) Run() error {
 	fmt.Println("Starting Mario Kart Go")
 
 	var err error
-  e.renderer, err = NewRenderer(800, 600, "Mario Kart Go")
+  e.renderer, err = NewRenderer(800, 600, "Mario Kart Go", e.camera)
   if err != nil {
     return fmt.Errorf("failed to create renderer: %v", err)
   }
   defer e.renderer.Cleanup()
 	
 	
-	circle1 := NewCircle(
-		WithColor(0.99607843137, 0.890196078, 0.83137254),
-		WithPosition(-0.2, -0.5, 0.0),
+	cube := NewCube(
+		WithPosition(0, 0, 0),
+		WithScale(1, 1, 1),
+		WithColor(1, 0, 0),
 	)
-
-	circle2 := NewCircle(
-		WithColor(0.99607843137, 0.890196078, 0.83137254),
-		WithPosition(0.2, -0.5, 0.0),
-	)
-
-	rect1 := NewRectangle(
-		WithColor(0.99607843137, 0.890196078, 0.83137254),
-		WithPosition(0.0, 0.0, 0.0),
-		WithScale(0.7, 0.9, 0.0),
-	)
-	
-	e.renderer.AddMesh(circle1)
-	e.renderer.AddMesh(circle2)
-	e.renderer.AddMesh(rect1)
+	e.renderer.AddMesh(cube)
 
 	e.running = true
+	e.startTime = time.Now()
 
 	for !e.renderer.ShouldClose() && e.running {
         e.update()
@@ -57,14 +50,30 @@ func (e *Engine) Run() error {
 }
 
 
+
+
+
+
 func (e *Engine) update() {
-    // Game logic will go here
+	elapsed := time.Since(e.startTime).Seconds()
+	
+	if elapsed > 3.0 {
+		fmt.Println("Rotating")
+		radius := float32(5.0)
+		speed := float32(0.5) 
+		angle := float32(elapsed-3.0) * speed
+		
+		x := radius * float32(math.Cos(float64(angle)))
+		z := radius * float32(math.Sin(float64(angle)))
+		y := float32(2.0) 		
+		e.camera.Position = mgl32.Vec3{x, y, z}
+		
+		e.camera.Target = mgl32.Vec3{0, 0, 0}
+	}
 }
 
 func (e *Engine) render() {
     e.renderer.Clear()
-    // Rendering calls will go here
     e.renderer.Render()
-
     e.renderer.SwapBuffers()
 }
