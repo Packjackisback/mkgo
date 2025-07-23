@@ -32,7 +32,7 @@ func (e *Engine) Run() error {
 	
 	
 	
-	model, err := LoadModel("internal/assets/cow.obj", 
+	model, err := LoadModel("internal/assets/Mario.obj", 
     WithPosition(0, 0, 0),
     WithScale(0.5, 0.5, 0.5),
     WithColor(1, 1, 1),
