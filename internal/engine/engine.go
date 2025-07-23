@@ -31,12 +31,17 @@ func (e *Engine) Run() error {
   defer e.renderer.Cleanup()
 	
 	
-	cube := NewCube(
-		WithPosition(0, 0, 0),
-		WithScale(1, 1, 1),
-		WithColor(1, 0, 0),
+	
+	model, err := LoadModel("internal/assets/cow.obj", 
+    WithPosition(0, 0, 0),
+    WithScale(0.5, 0.5, 0.5),
+    WithColor(1, 1, 1),
 	)
-	e.renderer.AddMesh(cube)
+	if err != nil {
+    return fmt.Errorf("failed to load model: %v", err)
+	}
+	e.renderer.AddMesh(model)
+
 
 	e.running = true
 	e.startTime = time.Now()
